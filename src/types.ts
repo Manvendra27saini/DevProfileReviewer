@@ -66,3 +66,11 @@ export interface UserStats {
   openPRs: number;
   languageStats: LanguageStats;
 }
+
+export interface RepoFilters {
+  language: string;
+  sortBy: 'stars' | 'forks' | 'updated';
+  sortOrder: 'desc' | 'asc';
+}
+
+export type Theme = 'light' | 'dark';
