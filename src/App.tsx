@@ -4,12 +4,13 @@ import './App.css';
 import UserProfile from './components/UserProfile';
 import RepoList from './components/RepoList';
 import Loader from './components/Loader';
-import { GitHubUser, GitHubRepo } from './types';
+import { GitHubUser, GitHubRepo, UserStats } from './types';
 
 export default function App() {
   const [username, setUsername] = useState('');
   const [user, setUser] = useState<GitHubUser | null>(null);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -20,6 +21,7 @@ export default function App() {
     setError('');
     setUser(null);
     setRepos([]);
+    setUserStats(null);
 
     try {
       // Fetch user data
@@ -29,15 +31,65 @@ export default function App() {
       }
       const userData = await userResponse.json();
 
-      // Fetch repositories
-      const reposResponse = await fetch(`https://api.github.com/users/${searchUsername}/repos?sort=updated&per_page=5`);
-      if (!reposResponse.ok) {
+      // Fetch all repositories (not just top 5)
+      const allReposResponse = await fetch(`https://api.github.com/users/${searchUsername}/repos?sort=updated&per_page=100`);
+      if (!allReposResponse.ok) {
         throw new Error('Failed to fetch repositories');
       }
-      const reposData = await reposResponse.json();
+      const allReposData = await allReposResponse.json();
+
+      // Fetch top 5 repositories for display
+      const topRepos = allReposData.slice(0, 5);
+
+      // Calculate language statistics
+      const languageStats: { [key: string]: number } = {};
+      allReposData.forEach((repo: GitHubRepo) => {
+        if (repo.language) {
+          languageStats[repo.language] = (languageStats[repo.language] || 0) + 1;
+        }
+      });
+
+      // Fetch commit and PR statistics
+      let totalCommits = 0;
+      let totalPRs = 0;
+      let openPRs = 0;
+
+      // Use Promise.all for parallel requests (limited to prevent rate limiting)
+      const repoPromises = allReposData.slice(0, 10).map(async (repo: GitHubRepo) => {
+        try {
+          // Fetch commits for each repo
+          const commitsResponse = await fetch(`https://api.github.com/repos/${repo.full_name}/commits?author=${searchUsername}&per_page=100`);
+          if (commitsResponse.ok) {
+            const commits = await commitsResponse.json();
+            totalCommits += commits.length;
+          }
+
+          // Fetch PRs for each repo
+          const prsResponse = await fetch(`https://api.github.com/repos/${repo.full_name}/pulls?state=all&per_page=100`);
+          if (prsResponse.ok) {
+            const prs = await prsResponse.json();
+            const userPRs = prs.filter((pr: any) => pr.user.login === searchUsername);
+            totalPRs += userPRs.length;
+            openPRs += userPRs.filter((pr: any) => pr.state === 'open').length;
+          }
+        } catch (err) {
+          // Silently handle individual repo errors
+          console.warn(`Failed to fetch data for repo ${repo.name}:`, err);
+        }
+      });
+
+      await Promise.all(repoPromises);
+
+      const stats: UserStats = {
+        totalCommits,
+        totalPRs,
+        openPRs,
+        languageStats
+      };
 
       setUser(userData);
-      setRepos(reposData);
+      setRepos(topRepos);
+      setUserStats(stats);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -88,7 +140,7 @@ export default function App() {
 
         {user && !loading && !error && (
           <div className="results-container">
-            <UserProfile user={user} />
+            <UserProfile user={user} userStats={userStats} />
             <RepoList repos={repos} />
           </div>
         )}

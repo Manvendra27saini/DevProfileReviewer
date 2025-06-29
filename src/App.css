@@ -198,6 +198,58 @@ body {
   padding: 2rem;
 }
 
+/* Languages Section */
+.languages-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #30363d;
+}
+
+.languages-section h4 {
+  margin-bottom: 1rem;
+  color: #f0f6fc;
+  font-size: 1rem;
+}
+
+.languages-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.language-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: #0d1117;
+  border-radius: 6px;
+  border: 1px solid #21262d;
+}
+
+.language-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.language-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.language-name {
+  font-weight: 500;
+  color: #f0f6fc;
+}
+
+.language-count {
+  font-size: 0.875rem;
+  color: #8b949e;
+}
+
+
+
 .user-header {
   display: flex;
   align-items: center;
@@ -275,7 +327,7 @@ body {
 
 .user-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
   padding-top: 1.5rem;
   border-top: 1px solid #30363d;
@@ -443,7 +495,7 @@ body {
   }
   
   .user-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
   

@@ -29,4 +29,40 @@ export interface GitHubRepo {
   created_at: string;
   updated_at: string;
   topics: string[];
+  open_issues_count: number;
+}
+
+export interface GitHubCommit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      name: string;
+      date: string;
+    };
+  };
+  html_url: string;
+}
+
+export interface GitHubPullRequest {
+  id: number;
+  number: number;
+  title: string;
+  state: 'open' | 'closed';
+  created_at: string;
+  html_url: string;
+  user: {
+    login: string;
+  };
+}
+
+export interface LanguageStats {
+  [language: string]: number;
+}
+
+export interface UserStats {
+  totalCommits: number;
+  totalPRs: number;
+  openPRs: number;
+  languageStats: LanguageStats;
 }
