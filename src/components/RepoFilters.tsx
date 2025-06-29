@@ -38,7 +38,7 @@ const RepoFiltersComponent: React.FC<RepoFiltersProps> = ({
         <label htmlFor="language-filter">Filter by Language:</label>
         <select
           id="language-filter"
-          value={filters.language ?? ''}  {/* <-- FIX applied here */}
+          value={filters.language ?? ''} {/* <- THIS LINE IS FIXED */}
           onChange={(e) => handleLanguageChange(e.target.value)}
           className="filter-select"
         >
