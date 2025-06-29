@@ -83,7 +83,7 @@ function AppContent() {
       return filters.sortOrder === 'desc' ? bValue - aValue : aValue - bValue;
     });
 
-    setFilteredRepos(filtered.slice(0, 10)); // Show top 10 after filtering
+    setFilteredRepos(filtered.slice(0, 50)); // Show top 50 after filtering
   }, [allRepos, filters]);
 
   const saveSearchHistory = (searchUsername: string) => {
@@ -128,12 +128,12 @@ function AppContent() {
         }
       });
 
-      // Fetch commit and PR statistics (limited to prevent rate limiting)
+      // Fetch commit and PR statistics for all repositories
       let totalCommits = 0;
       let totalPRs = 0;
       let openPRs = 0;
 
-      const repoPromises = allReposData.slice(0, 10).map(async (repo: GitHubRepo) => {
+      const repoPromises = allReposData.map(async (repo: GitHubRepo) => {
         try {
           const commitsResponse = await fetch(`https://api.github.com/repos/${repo.full_name}/commits?author=${searchUsername}&per_page=100`);
           if (commitsResponse.ok) {
