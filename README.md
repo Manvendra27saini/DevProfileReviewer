@@ -49,7 +49,7 @@ A modern, responsive GitHub profile and repository viewer built with React, Type
 
 ## 🚀 Live Demo
 
-Visit the live application: [DevProfile Viewer on Replit](https://devprofile-viewer.replit.dev)
+Visit the live application: 
 
 ## 🏗️ Tech Stack
 
@@ -58,7 +58,7 @@ Visit the live application: [DevProfile Viewer on Replit](https://devprofile-vie
 - **Build Tool**: Vite 3.0.4
 - **Styling**: CSS3 with CSS Variables
 - **API**: GitHub REST API v3
-- **Hosting**: Replit
+- **Hosting**: Vercel
 - **State Management**: React Hooks (useState, useEffect, useContext)
 - **Theme System**: Context API with localStorage persistence
 
@@ -163,24 +163,7 @@ The application is fully responsive and optimized for:
 - **Unauthenticated**: 60 requests per hour per IP
 - **Authenticated**: 5,000 requests per hour (not implemented)
 
-## 🚀 Deployment on Replit
 
-This project is optimized for Replit deployment:
-
-1. **Fork this Repl** or import from GitHub
-2. **Hit the Run button** - Vite will start automatically
-3. **Access via the webview** or get the public URL
-4. **Deploy to production** using Replit's deployment feature
-
-### Replit Configuration
-```toml
-# .replit
-run = "npm run dev"
-modules = ["nodejs-20"]
-deploymentTarget = "static"
-build = ["npm", "run", "build"]
-publicDir = "dist"
-```
 
 ## 🧪 Testing
 
@@ -235,15 +218,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Portfolio: [yourwebsite.com](https://yourwebsite.com)
+- GitHub: [@yourusername](https://github.com/Manvendra27saini)
 
 ## 🙏 Acknowledgments
 
 - **GitHub** for providing the comprehensive REST API
 - **React Team** for the amazing framework
 - **Vite** for the blazing fast build tool
-- **Replit** for the seamless hosting platform
 - **Open Source Community** for inspiration and best practices
 
 ---

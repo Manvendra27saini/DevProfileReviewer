@@ -13,7 +13,7 @@ const RepoFiltersComponent: React.FC<RepoFiltersProps> = ({
   onFiltersChange, 
   repos 
 }) => {
-  // Get unique languages from repos
+  
   const languages = Array.from(
     new Set(repos.map(repo => repo.language).filter(Boolean))
   ).sort();
