@@ -14,11 +14,11 @@ const RepoFiltersComponent: React.FC<RepoFiltersProps> = ({
 }) => {
   
   const languages = Array.from(
-    new Set(repos.map(repo => repo.language).filter(Boolean))
+    new Set(repos.map(repo => repo.language).filter((lang): lang is string => lang !== null))
   ).sort();
 
   const handleLanguageChange = (language: string) => {
-    onFiltersChange({ ...filters, language });
+    onFiltersChange({ ...filters, language: language || null });
   };
 
   const handleSortChange = (sortBy: RepoFilters['sortBy']) => {
@@ -38,7 +38,7 @@ const RepoFiltersComponent: React.FC<RepoFiltersProps> = ({
         <label htmlFor="language-filter">Filter by Language:</label>
         <select
           id="language-filter"
-          value={filters.language ?? ''} {/* <- THIS LINE IS FIXED */}
+          value={filters.language ?? ''}
           onChange={(e) => handleLanguageChange(e.target.value)}
           className="filter-select"
         >

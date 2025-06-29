@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import UserProfile from './components/UserProfile';
@@ -20,7 +19,7 @@ function AppContent() {
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [filters, setFilters] = useState<RepoFiltersType>({
-    language: '',
+    language: null,
     sortBy: 'stars',
     sortOrder: 'desc'
   });

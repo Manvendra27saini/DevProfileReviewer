@@ -1,4 +1,3 @@
-
 export interface GitHubUser {
   login: string;
   id: number;
@@ -68,7 +67,7 @@ export interface UserStats {
 }
 
 export interface RepoFilters {
-  language: string;
+  language: string | null;
   sortBy: 'stars' | 'forks' | 'updated';
   sortOrder: 'desc' | 'asc';
 }
