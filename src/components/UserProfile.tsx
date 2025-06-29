@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { GitHubUser, UserStats } from '../types';
 
@@ -18,7 +17,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, userStats }) => {
 
   const getTopLanguages = () => {
     if (!userStats?.languageStats) return [];
-    
+
     return Object.entries(userStats.languageStats)
       .sort(([,a], [,b]) => b - a)
       .slice(0, 5);
@@ -118,33 +117,21 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, userStats }) => {
 
       <div className="user-stats">
         <div className="stat-item">
+          <span className="stat-label">Public Repos</span>
           <span className="stat-number">{user.public_repos}</span>
-          <span className="stat-label">Repositories</span>
         </div>
         <div className="stat-item">
-          <span className="stat-number">{user.followers}</span>
           <span className="stat-label">Followers</span>
+          <span className="stat-number">{user.followers}</span>
         </div>
         <div className="stat-item">
-          <span className="stat-number">{user.following}</span>
           <span className="stat-label">Following</span>
+          <span className="stat-number">{user.following}</span>
         </div>
-        {userStats && (
-          <>
-            <div className="stat-item">
-              <span className="stat-number">{userStats.totalCommits}</span>
-              <span className="stat-label">Total Commits</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">{userStats.totalPRs}</span>
-              <span className="stat-label">Pull Requests</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">{userStats.openPRs}</span>
-              <span className="stat-label">Open PRs</span>
-            </div>
-          </>
-        )}
+        <div className="stat-item">
+          <span className="stat-label">Joined</span>
+          <span className="stat-number">{new Date(user.created_at).getFullYear()}</span>
+        </div>
       </div>
 
       {userStats && getTopLanguages().length > 0 && (

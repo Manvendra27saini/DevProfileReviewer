@@ -116,18 +116,24 @@ function AppContent() {
         if (userResponse.status === 404) {
           throw new Error(`User "${searchUsername}" not found. Please check the username and try again.`);
         }
+        if (userResponse.status === 403) {
+          throw new Error('GitHub API rate limit exceeded. Please try again later.');
+        }
         throw new Error('Failed to fetch user data');
       }
       const userData = await userResponse.json();
 
-      // Fetch all repositories
-      const allReposResponse = await fetch(`https://api.github.com/users/${searchUsername}/repos?sort=updated&per_page=100`);
+      // Fetch repositories with smaller page size to reduce API load
+      const allReposResponse = await fetch(`https://api.github.com/users/${searchUsername}/repos?sort=updated&per_page=30`);
       if (!allReposResponse.ok) {
+        if (allReposResponse.status === 403) {
+          throw new Error('GitHub API rate limit exceeded. Please try again later.');
+        }
         throw new Error('Failed to fetch repositories');
       }
       const allReposData = await allReposResponse.json();
 
-      // Calculate language statistics
+      // Calculate language statistics from repositories
       const languageStats: { [key: string]: number } = {};
       allReposData.forEach((repo: GitHubRepo) => {
         if (repo.language) {
@@ -135,21 +141,11 @@ function AppContent() {
         }
       });
 
-      // Calculate basic stats from available repo data (no additional API calls)
-      let totalCommits = 0;
-      let totalPRs = 0;
-      let openPRs = 0;
-
-      // Use available repository data to estimate activity
-      // This avoids rate limiting issues
-      totalCommits = allReposData.reduce((sum, repo) => sum + (repo.size || 0), 0);
-      
-      console.log(`Fetched ${allReposData.length} repositories for ${searchUsername}`);
-
+      // Create simple stats without additional API calls
       const stats: UserStats = {
-        totalCommits,
-        totalPRs,
-        openPRs,
+        totalCommits: 0, // Not fetched to avoid rate limits
+        totalPRs: 0,     // Not fetched to avoid rate limits
+        openPRs: 0,      // Not fetched to avoid rate limits
         languageStats
       };
 
@@ -157,6 +153,8 @@ function AppContent() {
       setAllRepos(allReposData);
       setUserStats(stats);
       saveSearchHistory(searchUsername);
+      
+      console.log(`Successfully fetched ${allReposData.length} repositories for ${searchUsername}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred while fetching data';
       setError(errorMessage);
