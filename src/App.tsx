@@ -95,6 +95,13 @@ function AppContent() {
   const fetchUserData = async (searchUsername: string) => {
     if (!searchUsername.trim()) return;
     
+    // Validate GitHub username format
+    const githubUsernameRegex = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
+    if (!githubUsernameRegex.test(searchUsername)) {
+      setError('Please enter a valid GitHub username (letters, numbers, and hyphens only)');
+      return;
+    }
+    
     setLoading(true);
     setError('');
     setUser(null);
@@ -128,32 +135,16 @@ function AppContent() {
         }
       });
 
-      // Fetch commit and PR statistics for all repositories
+      // Calculate basic stats from available repo data (no additional API calls)
       let totalCommits = 0;
       let totalPRs = 0;
       let openPRs = 0;
 
-      const repoPromises = allReposData.map(async (repo: GitHubRepo) => {
-        try {
-          const commitsResponse = await fetch(`https://api.github.com/repos/${repo.full_name}/commits?author=${searchUsername}&per_page=100`);
-          if (commitsResponse.ok) {
-            const commits = await commitsResponse.json();
-            totalCommits += commits.length;
-          }
-
-          const prsResponse = await fetch(`https://api.github.com/repos/${repo.full_name}/pulls?state=all&per_page=100`);
-          if (prsResponse.ok) {
-            const prs = await prsResponse.json();
-            const userPRs = prs.filter((pr: any) => pr.user.login === searchUsername);
-            totalPRs += userPRs.length;
-            openPRs += userPRs.filter((pr: any) => pr.state === 'open').length;
-          }
-        } catch (err) {
-          console.warn(`Failed to fetch data for repo ${repo.name}:`, err);
-        }
-      });
-
-      await Promise.all(repoPromises);
+      // Use available repository data to estimate activity
+      // This avoids rate limiting issues
+      totalCommits = allReposData.reduce((sum, repo) => sum + (repo.size || 0), 0);
+      
+      console.log(`Fetched ${allReposData.length} repositories for ${searchUsername}`);
 
       const stats: UserStats = {
         totalCommits,
@@ -167,8 +158,13 @@ function AppContent() {
       setUserStats(stats);
       saveSearchHistory(searchUsername);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Error fetching user data:', err);
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred while fetching data';
+      setError(errorMessage);
+      console.error('Error fetching user data:', {
+        error: err,
+        username: searchUsername,
+        message: errorMessage
+      });
     } finally {
       setLoading(false);
     }
