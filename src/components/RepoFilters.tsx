@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { RepoFilters, GitHubRepo } from '../types';
 
@@ -39,7 +38,7 @@ const RepoFiltersComponent: React.FC<RepoFiltersProps> = ({
         <label htmlFor="language-filter">Filter by Language:</label>
         <select
           id="language-filter"
-          value={filters.language}
+          value={filters.language ?? ''}  {/* <-- FIX applied here */}
           onChange={(e) => handleLanguageChange(e.target.value)}
           className="filter-select"
         >
