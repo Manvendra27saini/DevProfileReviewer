@@ -270,9 +270,9 @@ function AppContent() {
 
       <footer className="app-footer">
         <p>
-          Built with React & GitHub API By
+          Built with React & GitHub API By 
           <a href="https://github.com/Manvendra27saini" target="_blank" rel="noopener noreferrer">
-           Manvendra Saini
+              Manvendra Saini
           </a>
         </p>
       </footer>
