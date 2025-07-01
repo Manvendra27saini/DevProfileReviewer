@@ -115,7 +115,7 @@ function AppContent() {
         if (userResponse.status === 404) {
           throw new Error(`User "${searchUsername}" not found. Please check the username and try again.`);
         }
-        if (userResponse.status === 429) {
+        if (userResponse.status === 403) {
           throw new Error('GitHub API rate limit exceeded. Please try again later.');
         }
         throw new Error('Failed to fetch user data');
@@ -269,7 +269,12 @@ function AppContent() {
       </main>
 
       <footer className="app-footer">
-        <p>Built with React & GitHub API</p>
+        <p>
+          Built with React & GitHub API By
+          <a href="https://github.com/Manvendra27saini" target="_blank" rel="noopener noreferrer">
+           Manvendra Saini
+          </a>
+        </p>
       </footer>
     </div>
   );
