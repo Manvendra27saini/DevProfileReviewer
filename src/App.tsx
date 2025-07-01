@@ -115,7 +115,7 @@ function AppContent() {
         if (userResponse.status === 404) {
           throw new Error(`User "${searchUsername}" not found. Please check the username and try again.`);
         }
-        if (userResponse.status === 403) {
+        if (userResponse.status === 429) {
           throw new Error('GitHub API rate limit exceeded. Please try again later.');
         }
         throw new Error('Failed to fetch user data');
@@ -125,7 +125,7 @@ function AppContent() {
       // Fetch repositories with smaller page size to reduce API load
       const allReposResponse = await fetch(`https://api.github.com/users/${searchUsername}/repos?sort=updated&per_page=30`);
       if (!allReposResponse.ok) {
-        if (allReposResponse.status === 403) {
+        if (allReposResponse.status === 429) {
           throw new Error('GitHub API rate limit exceeded. Please try again later.');
         }
         throw new Error('Failed to fetch repositories');
